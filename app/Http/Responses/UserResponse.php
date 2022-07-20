@@ -12,7 +12,7 @@ class UserResponse
         $url = env('IMAGE_URL');
 
         $this->user_details = [
-            'user_id' => $model->user_id,
+            'user_id' => $model->id,
             'username' => $model->username,
         ];
     }

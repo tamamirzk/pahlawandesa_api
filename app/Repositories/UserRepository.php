@@ -33,7 +33,7 @@ class UserRepository extends GenericRepository implements IUserRepository{
         
         if($check_user){
             if ( password_verify($password, $check_user['password']) == true ) {
-                $user_id =  $check_user->user_id;
+                $user_id =  $check_user->id;
 
             } else {
                  $user_id =  null; 
@@ -48,11 +48,6 @@ class UserRepository extends GenericRepository implements IUserRepository{
         $email = $data['email'];
         $username = $data['username'];
 
-        $data['status'] = 1;
-        $data['user_type'] = 2;
-        $data['provinsi'] = 32;
-        $data['created_user'] = 0;
-        $data['created_date'] = date('Y-m-d H:i:s');
         $data['user_guid'] = $this->createGuid();
         $data['catalog_name'] = $this->createCatalogName($username);
         $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
@@ -61,32 +56,12 @@ class UserRepository extends GenericRepository implements IUserRepository{
         // Mail::to($user)->send(new Welcome($user));
 
         if($user){
-            $user_id =  $user->user_id;
+            $user_id =  $user->id;
         } else {
             $user_id =  null; 
         }
 
         return $this->query($user_id);
-
-    }
-    
-    public function loginGoogle($email){
-        $check_user = $this->model->where('email', '=', $email)->where('status', 1)->first();
-        if($check_user){
-            $user_id =  $check_user->id;
-            return $this->query($user_id);
-        }else { return null;}
-
-    }
-
-    public function registerGoogle($email){
-        $data = [ 'email' => $email, 'role_id' => 3, 'status' => 0 ];
-        $user = $this->model->create($data);
-        Mail::to($email)->send(new Welcome($user));
-        if($user){
-            $user_id =  $user->id;
-            return $this->query($user_id);
-        }else { return null;}
 
     }
 
@@ -109,74 +84,6 @@ class UserRepository extends GenericRepository implements IUserRepository{
             $query = $this->model->findOrFail($id)->update($user);
             return $this->query($id);
         }else { return null; }
-
-    }
-
-    
-    public function reqChangeEmail($email){
-        $auth_email = auth()->user()->email;
-        $user = $this->model->where('email', $email)->first();
-
-        if($user){
-            if($email == $auth_email){
-                $response = Mail::to($email)->send(new changeEmail($user));
-                return true;
-    
-            }else { return null; }
-
-        }else { return null; }
-
-    }
-
-    public function changeEmail(array $data){
-        $data['status'] = 0;
-        $email = $data['email'];
-        $user_id = $data['user_id'];
-
-        $user = $this->model->findOrFail($user_id);
-        $user->update($data);
-
-        if($user){
-            $response = Mail::to($email)->send(new Welcome($user));
-            return true;
-
-        }else { return null; }
-
-    }
-
-    public function forgot($email){
-        $user = $this->model->where('email', $email)->first();
-
-        if($user){
-            $response = Mail::to($email)->send(new ForgotPassword($user));
-            return true;
-
-        }else { return null; }
-
-    }
-
-    public function reset($id,$token){
-        $check_user = $this->model->select('email')->find($id);
-        $user = $check_user ? $check_user->toArray() : null;
-
-        if($user && $token) {
-            $credentials = JWT::decode($token, $user['email'], ['HS256']);
-            return $credentials;
-
-        }else {
-            return null;
-        }
-
-    }
-    
-    public function change(array $data){
-        $user_id = $data['user_id'];
-        $newPassword['password'] = Hash::make($data['password']);
-        
-        $query = $this->model->findOrFail($user_id);
-        $query->update($newPassword);
-        
-        return $this->query($user_id);
 
     }
 
@@ -231,7 +138,7 @@ class UserRepository extends GenericRepository implements IUserRepository{
 
     public function query($user_id){  
         if($user_id){
-            $query =  $this->model->where('user_id', $user_id)->get();
+            $query =  $this->model->where('id', $user_id)->get();
             return $query;
         }else{
             return null;

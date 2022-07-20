@@ -23,7 +23,7 @@ class ProductController extends Controller
             $filter = request('q');
             $limit = request('limit');
             $page = request('page', 1);
-            $user_id = Auth::user()->user_id;
+            $user_id = Auth::user()->id;
             $category_id = request('category_id');
             $order = request('order_by', 'created_date');
             $sort = request('sort_by', 'desc');

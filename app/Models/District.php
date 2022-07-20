@@ -4,11 +4,7 @@ namespace App\Models;
 use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Model;
 
-class Kabupaten extends Model
+class District extends Model
 {
-
-    protected $table = "kabupaten";
-
     protected $fillable = [];
-
 }

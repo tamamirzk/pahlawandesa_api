@@ -8,40 +8,48 @@ use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Transformers\KabupatenTransformer;
+use App\Transformers\DistrictTransformer;
 use Laravel\Lumen\Auth\Authorizable;
 
 class User extends Model
 {
     use Authenticatable, Authorizable, HasFactory, Filterable;
-    public $timestamps = false;
-    
-    protected $table = "user";
-    protected $defaultSort = 'asc';
-    protected $primaryKey = "user_id";
-    protected $guarded = array('user_id');
 
+    protected $table = "users";
+    protected $primaryKey = "id";
+    protected $defaultSort = 'asc';
+    protected $guarded = array('id');
 
     protected $fillable = [
-         'full_name',
-         'username',
-         'email',
-         'password',
-         'user_category',
-         'kabupaten',
-         'kecamatan',
-         'village',
-         'status',
-         'user_type',
-         'provinsi',
-         'created_user',
-         'created_date',
-         'user_guid',
-         'catalog_name',
-         'token',
+        'user_type_id',
+        'user_category_id',
+        'user_guid',
+        'username',
+        'full_name',
+        'email',
+        'password',
+        'phone_number',
+        'birthdate',
+        'profile_picture',
+        'profile_description',
+        'address',
+        'province_id',
+        'district_id',
+        'sub_district_id',
+        'village_id',
+        'catalog_url',
+        'catalog_name',
+        'catalog_tagline',
+        'catalog_picture',
+        'status',
+        'token',
+        'deleted_at',
      ];
 
-    
+     protected $dates = [
+        'created_at',
+        'updated_at',
+    ];
 
     public function getSortDirection()
     {
@@ -78,20 +86,20 @@ class User extends Model
     
     public static function getKabupatenList()
     {
-        $query = Kabupaten::get();
-        $data = fractal($query, new KabupatenTransformer())->toArray()['data'];
+        $query = District::get();
+        $data = fractal($query, new DistrictTransformer())->toArray()['data'];
         return $data;
     }
 
     public static function getKecamatanList($kabupaten_id)
     {
-        $query = Kecamatan::where('kabupaten_id',$kabupaten_id)->get();
+        $query = SubDistrict::where('district_id',$kabupaten_id)->get();
         return $query;
     }
     
     public static function getVillageList($kecamatan_id)
     {
-        $query = Village::where('village_kecamatan',$kecamatan_id)->get();
+        $query = Village::where('sub_district_id',$kecamatan_id)->get();
         return $query;
     }
 }

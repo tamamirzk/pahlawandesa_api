@@ -5,12 +5,12 @@ namespace App\Http\Responses;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\URL;
 
-class KabupatenResponse
+class DistrictResponse
 {
     public function __construct($model)
     {
-        $this->id = (int)$model->kabupaten_id;
-        $this->name = $model->kabupaten_name;
+        $this->id = (int)$model->id;
+        $this->name = $model->name;
     }
 
 

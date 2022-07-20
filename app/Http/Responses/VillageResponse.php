@@ -9,9 +9,9 @@ class VillageResponse
 {
     public function __construct($model)
     {
-        $this->id = (int)$model->village_id;
-        $this->kecamatan_id = (int)$model->village_kecamatan;
-        $this->name = $model->village_name;
+        $this->id = (int)$model->id;
+        $this->kecamatan_id = (int)$model->sub_district_id;
+        $this->name = $model->name;
     }
 
 

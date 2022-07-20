@@ -15,7 +15,7 @@ use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\ChangeEmailRequest;
 use App\Http\Requests\ChangePasswordRequest;
 use App\Transformers\UserTransformer;
-use App\Transformers\KecamatanTransformer;
+use App\Transformers\SubDistrictTransformer;
 use App\Transformers\VillageTransformer;
 use App\Repositories\Contracts\IUserRepository;
 
@@ -37,7 +37,7 @@ class AuthController extends Controller
                 $result = $this->repo->login($credentials);
                 
                 if ($result){         
-                    $user_id = $result[0]->user_id;   
+                    $user_id = $result[0]->id;   
                     $token = $this->repo->getToken($user_id);
                     return $this->buildResponseWithToken($result, new UserTransformer(), json_decode($token->getContent()), 'success');
                 } else {
@@ -51,23 +51,22 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        // try {
+        try {
             $patch = new RegisterRequest($request->all());
             $credentials = $patch->parse();
-
             if ($credentials){
                 $result = $this->repo->register($credentials);
                 if ($result){
-                    $user_id = $result[0]->user_id;   
+                    $user_id = $result[0]->id;   
                     $token = $this->repo->getToken($user_id);
                     return $this->buildResponseWithToken($result, new UserTransformer(), json_decode($token->getContent()), 'success');
                 } else {
                     return $this->buildErrorResponse('error' , 'User Not Found', 404);
                 }
             }
-        // } catch (\Exception $exception) {
-        //     return $this->buildErrorResponse('error' , $exception->getMessage(), $exception->getCode());
-        // }
+        } catch (\Exception $exception) {
+            return $this->buildErrorResponse('error' , $exception->getMessage(), $exception->getCode());
+        }
     }
 
     public function registerInfoKabupaten(Request $request)
@@ -85,7 +84,7 @@ class AuthController extends Controller
     {
         try {
             $result = $this->repo->registerInfoKecamatan($id);
-            return $this->buildCollectionNoMetaResponse($result, new KecamatanTransformer(), 'success', 'user');
+            return $this->buildCollectionNoMetaResponse($result, new SubDistrictTransformer(), 'success', 'user');
 
         } catch (\Exception $exception) {
             return $this->buildErrorResponse('error' , $exception->getMessage(), $exception->getCode());
@@ -155,76 +154,6 @@ class AuthController extends Controller
 
     }
     
-    public function changeEmail(Request $request)
-    {
-        try {
-            $patch = new ChangeEmailRequest($request->all());
-            $data = $patch->parse();
-
-            $result = $this->repo->changeEmail($data);
-            if ($result){
-                return view('notifications.general')->with(['message' => 'Please verify your account, we sent notification to your new email!']);
-            } else {
-                return view('notifications.general')->with(['message' => 'Ups Something Wrong!']);
-            }
-
-        } catch (\Exception $exception) {
-            return view('notifications.general')->with(['message' => 'Ups Something Wrong!']);
-        }
-    }
-
-    public function reset($id)
-    {
-        try {
-            $token = request('token');
-            $result = $this->repo->reset($id,$token);
-            if($result){
-                return view('change-password')->with(['id' => $id]);
-            } else {
-                return view('notifications.general')->with(['message' => 'Ups Something Wrong!']);
-            }
-
-        } catch (\Exception $exception) {
-            return view('notifications.general')->with(['message' => 'Ups Something Wrong!']);
-        }
-
-    }
-
-    public function forgot()
-    {
-        $email = Request('email');
-        try {
-            if ($email){
-                $result = $this->repo->forgot($email);
-                if ($result){
-                    return $this->buildResponse('success', 'Email Sent', 200);
-                } else {
-                    return $this->buildErrorResponse('error' , 'Email Not Found', 404);
-                }
-            }
-
-        } catch (\Exception $exception) {
-            return $this->buildErrorResponse('error' , $exception->getMessage(), $exception->getCode());
-        }
-    }
-  
-    public function change(Request $request)
-    {
-        try {
-            $patch = new ChangePasswordRequest($request->all());
-            $data = $patch->parse();
-
-            $result = $this->repo->change($data);
-            if ($result){
-                return view('notifications.success');
-            } else {
-                return view('notifications.general')->with(['message' => 'Ups Something Wrong!']);
-            }
-
-        } catch (\Exception $exception) {
-            return view('notifications.general')->with(['message' => 'Ups Something Wrong!']);
-        }
-    }
     
     public function logout()
     {

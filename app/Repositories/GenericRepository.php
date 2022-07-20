@@ -2,6 +2,8 @@
 
 namespace App\Repositories;
  
+use App\Models\User;
+use App\Models\Seller;
 use App\Repositories\Contracts\IGenericRepository;
 
 abstract class GenericRepository implements IGenericRepository

@@ -16,14 +16,14 @@ class RegisterRequest
         }
 
         $validator = Validator::make($data, [
+            "user_category_id" => "required",
             "full_name" => "required",
-            "username" => "required|unique:user",
-            "email" => "required|email|unique:user",
+            "username" => "required|unique:users",
+            "email" => "required|email|unique:users",
             "password" => "required|min:4",
-            "user_category" => "required",
-            "kabupaten" => "required",
-            "kecamatan" => "required",
-            "village" => "required",
+            "district_id" => "required",
+            "sub_district_id" => "required",
+            "village_id" => "required",
         ]);
 
         if ($validator->fails())
@@ -34,27 +34,33 @@ class RegisterRequest
 
     private function map($object)
     {
+        $this->status = 1;
+        $this->province_id = 32;
+        $this->user_type_id = 2;
+        $this->user_category_id = property_exists($object, 'user_category_id') ? $object->user_category_id : null;
         $this->full_name = property_exists($object, 'full_name') ? $object->full_name : null;
         $this->username = property_exists($object, 'username') ? $object->username : null;
         $this->email = property_exists($object, 'email') ? $object->email : null;
         $this->password = property_exists($object, 'password') ? $object->password : null;
-        $this->user_category = property_exists($object, 'user_category') ? $object->user_category : null;
-        $this->kabupaten = property_exists($object, 'kabupaten') ? $object->kabupaten : null;
-        $this->kecamatan = property_exists($object, 'kecamatan') ? $object->kecamatan : null;
-        $this->village = property_exists($object, 'village') ? $object->village : null;
+        $this->district_id = property_exists($object, 'district_id') ? $object->district_id : null;
+        $this->sub_district_id = property_exists($object, 'sub_district_id') ? $object->sub_district_id : null;
+        $this->village_id = property_exists($object, 'village_id') ? $object->village_id : null;
     }
 
     public function parse()
     {
         $result = array(
+            'status' => $this->status,
+            'user_type_id' => $this->user_type_id,
+            'user_category_id' => $this->user_category_id,
             'full_name' => $this->full_name,
             'username' => $this->username,
             'email' => $this->email,
             'password' => $this->password,
-            'user_category' => $this->user_category,
-            'kabupaten' => $this->kabupaten,
-            'kecamatan' => $this->kecamatan,
-            'village' => $this->village,
+            'province_id' => $this->province_id,
+            'district_id' => $this->district_id,
+            'sub_district_id' => $this->sub_district_id,
+            'village_id' => $this->village_id,
         );
 
         return array_filter($result, function ($value) {
