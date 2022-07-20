@@ -11,11 +11,11 @@ class CategoryResponse
     {
         $url_image = env('CATEGORY_URL');
 
-        $this->id = (int)$model->category_id;
-        $this->name = $model->category_name;
-        $this->slug = $model->category_slug;
-        $this->image = $model->category_image ? $url_image.$model->category_image : null;
-        $this->description = $model->category_description;
+        $this->id = (int)$model->id;
+        $this->name = $model->name;
+        $this->slug = $model->slug;
+        $this->image = $model->image ? $url_image.$model->image : null;
+        $this->description = $model->description;
     }
 
 

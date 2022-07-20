@@ -9,14 +9,9 @@ class Category extends Model
 {
     use Filterable;
 
-    protected $table = "category";
-
     protected $fillable = [];
     
     protected $defaultSort = 'asc';
-    protected $defaultKey = 'category_id';
-
-    public function getKeyName() { return $this->defaultKey; }
     public function getSortDirection() { return $this->defaultSort; }
 
     
