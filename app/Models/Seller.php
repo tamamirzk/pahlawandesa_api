@@ -46,7 +46,7 @@ class Seller extends Model
 
     public static function getSellerList()
     {
-        $query = Seller::where('user_id', Auth::user()->user_id)->get();
+        $query = Seller::where('user_id', Auth::user()->id)->get();
         return fractal($query, new SellerTransformer())->toArray()['data'];
     }
 

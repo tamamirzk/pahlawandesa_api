@@ -32,7 +32,7 @@ $router->group(['prefix' => 'management'], function () use ($router) {
     
     $router->group(['prefix' => 'shopee', ], function () use ($router) {
         $router->get('/get-category', 'Marketplace\ShopeeController@get_category');
-        $router->get('/create-category', 'Marketplace\ShopeeController@insertCategoryShopee');
+        $router->get('/create-category', 'Marketplace\ShopeeController@insertCategoryId');
     });
     
 });
@@ -47,6 +47,7 @@ $router->group(['prefix' => 'management', 'middleware' => 'jwt_auth'], function 
     $router->group(['prefix' => 'tokopedia', ], function () use ($router) {
         $router->get('/', 'Marketplace\TokopediaController@index');
         $router->post('/', 'Marketplace\TokopediaController@store');
+        $router->get('/get-category', 'Marketplace\TokopediaController@get_category');
     });
 
     $router->group(['prefix' => 'products', ], function () use ($router) {

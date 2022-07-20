@@ -26,16 +26,18 @@ class UserMarketplaceTokopedia extends Model
         $query = UserMarketplace::where('user_id', Auth::user()->user_id)->where('marketplace_id', $marketplace_id)->first();
         if($query){
             $check = $library->get_shop_info();
-            if($check){
-                dd('data ada');
-            }else{
-                
-                dd('data tidak ada');
+            if($check) {
+                $query = UserMarketplace::where('user_id', Auth::user()->user_id)->where('marketplace_id', $marketplace_id)->update(['status' => 1, 'status_name'=>'Terhubung']);
+
+            } else {
+                $query = UserMarketplace::where('user_id', Auth::user()->user_id)->where('marketplace_id', $marketplace_id)->update(['status' => 0, 'status_name'=>'Gagal Terhubung']);
             }
 
+        } else {
+            $query = UserMarketplace::where('user_id', Auth::user()->user_id)->where('marketplace_id', $marketplace_id)->update(['status' => 0, 'status_name'=>'Belum Terhubung']);
         }
-
-        return $status;
+        
+        return UserMarketplace::where('user_id', Auth::user()->user_id)->where('marketplace_id', $marketplace_id)->first();
     }
 
     public static function auth($shop_name, $shop_url)

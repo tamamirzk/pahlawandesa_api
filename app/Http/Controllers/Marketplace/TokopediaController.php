@@ -27,11 +27,11 @@ class TokopediaController extends Controller
             return response()->json([
                 'status' => 'success',
                 'data' => [[
-                    'user_id' => $check_status ? $check_status->user_id : null,
-                    'status' => $check_status ? $check_status->status : 0,
-                    'status_name' => $check_status ? $check_status->status_name : 'Belum Terhubung',
-                    'shop_name' => $check_status ? $check_status->shop_name : null,
-                    'shop_url' => $check_status ? $check_status->shop_url : null,
+                    'user_id' =>  $check_status->user_id,
+                    'status' =>  $check_status->status,
+                    'status_name' =>  $check_status->status_name,
+                    'shop_name' =>  $check_status->shop_name,
+                    'shop_url' =>  $check_status->shop_url,
                 ]],
                 'meta' => null
             ]);
@@ -56,7 +56,17 @@ class TokopediaController extends Controller
         } catch (\Exception $exception) {
             return $this->buildErrorResponse('error' , $exception->getMessage(), $exception->getCode());
         }
-    } 
+    }
+
+    public function get_category()
+    {
+        $result = $this->library->get_category();
+        $data = json_encode($result);
+        // dd($result);
+        // dd(json_decode($result));
+        return $result;
+        
+    }
     
     
 }

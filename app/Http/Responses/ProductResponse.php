@@ -13,7 +13,7 @@ class ProductResponse
         $this->name = $model->product_name;
         $this->price = $model->product_price;
         $this->slug = $model->product_slug;
-        $this->category_name = $model->category_name;
+        $this->category_name = $model->name;
         $this->description = $model->product_description;
         $this->image = $this->image($model->product_image);
     }

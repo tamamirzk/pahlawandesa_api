@@ -46,9 +46,9 @@ class Product extends Model
 
     public function getSellerAddress($id) {
         $seller = Seller::where('seller_id', $id)->get()->toArray()[0];
-        $village = Village::where('village_id', $seller['village'])->get()->toArray()[0]['village_name'];
-        $kecamatan = Kecamatan::where('kecamatan_id', $seller['kecamatan'])->get()->toArray()[0]['kecamatan_name'];
-        $kabupaten = Kabupaten::where('kabupaten_id', $seller['kabupaten'])->get()->toArray()[0]['kabupaten_name'];
+        $village = Village::where('id', $seller['village'])->get()->toArray()[0]['name'];
+        $kecamatan = SubDistrict::where('id', $seller['kecamatan'])->get()->toArray()[0]['name'];
+        $kabupaten = District::where('id', $seller['kabupaten'])->get()->toArray()[0]['name'];
 
         $address = 'Desa '.$village.', Kecamatan '.$kecamatan.', '.$kabupaten;
         return $address ? $address : null; 

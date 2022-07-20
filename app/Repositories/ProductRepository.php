@@ -32,8 +32,8 @@ class ProductRepository extends GenericRepository implements IProductRepository
         ];
 
         return $this->model->filter($data)
-            ->select('product.*','category.category_name')
-            ->join('category', 'category.category_id', '=', 'product.category_id')
+            ->select('product.*','categories.name')
+            ->join('categories', 'categories.id', '=', 'product.category_id')
             ->orderBy($orderBy, $sortBy)
             ->limit($limit)
             ->paginate($limit);
@@ -53,8 +53,8 @@ class ProductRepository extends GenericRepository implements IProductRepository
         ];
 
         return $this->model
-        ->select('product.*','category.category_name')
-        ->join('category', 'category.category_id', '=', 'product.category_id')
+        ->select('product.*','categories.name')
+        ->join('categories', 'categories.id', '=', 'product.category_id')
         ->filter($data)
         ->orderBy($orderBy, $sortBy)->get();
     }
@@ -67,9 +67,9 @@ class ProductRepository extends GenericRepository implements IProductRepository
         ];
 
         return $this->model->filter($data)
-            ->select('product.*','category.category_name', 'category.category_id', 'product_unit.product_unit_name', 'user.user_id', 'user.full_name', 'user.catalog_name')
-            ->join('user', 'user.user_id', '=', 'product.user_id')
-            ->join('category', 'category.category_id', '=', 'product.category_id')
+            ->select('product.*','categories.name', 'categories.id as category_id', 'product_unit.product_unit_name', 'users.full_name', 'users.catalog_name')
+            ->join('users', 'users.id', '=', 'product.user_id')
+            ->join('categories', 'categories.id', '=', 'product.category_id')
             ->join('product_unit', 'product_unit.product_unit_id', '=', 'product.product_unit')
             ->get();
     }
@@ -92,7 +92,7 @@ class ProductRepository extends GenericRepository implements IProductRepository
 
         return $this->model->filter($data)
             ->select('product.*','seller.seller_name','seller.store_name', 'product_unit.product_unit_name')
-            ->join('seller', 'seller.seller_guid', '=', 'product.seller_guid')
+            ->join('seller', 'seller.seller_id', '=', 'product.seller_id')
             ->join('product_unit', 'product_unit.product_unit_id', '=', 'product.product_unit')
             ->orderBy($orderBy, $sortBy)
             ->limit($limit)
@@ -114,7 +114,7 @@ class ProductRepository extends GenericRepository implements IProductRepository
 
         return $this->model
         ->select('product.*','seller.seller_name','seller.store_name', 'product_unit.product_unit_name')
-        ->join('seller', 'seller.seller_guid', '=', 'product.seller_guid')
+        ->join('seller', 'seller.seller_id', '=', 'product.seller_id')
         ->join('product_unit', 'product_unit.product_unit_id', '=', 'product.product_unit')
         ->filter($data)
         ->orderBy($orderBy, $sortBy)->get();

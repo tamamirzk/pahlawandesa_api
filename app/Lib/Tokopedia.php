@@ -82,4 +82,30 @@ class Tokopedia {
         return json_decode($result_json);
     }
 
+    public function get_category() {
+        $authenticate = $this->authenticate();
+        if (!empty($authenticate['error'])) {
+            return $authenticate['error'];
+        }
+        // dd($authenticate);
+        $data['access_token'] = $authenticate['access_token'];
+        $data['token_type'] = $authenticate['token_type'];
+        $data['fs_id'] = $this->app_id;
+        $data['method'] = 'GET';
+        $data['param'] = '/inventory/v1/fs/'.$data['fs_id'].'/product/category';
+        $data['headers'] = array(
+            'Authorization: '.$data['token_type'].' '.$data['access_token'] 
+        );
+        $data['keyword'] = '';
+        
+        $result_json = $this->get_api($this->url_api, $data['method'], $data['param'], $data['headers'], $data['keyword']);
+
+        if(isset($result_json)) {
+            $result_arr = json_decode($result_json,true);
+            return $result_arr;
+        } else {
+            return array("error"=>"internal server error");
+        }
+    }
+
 }

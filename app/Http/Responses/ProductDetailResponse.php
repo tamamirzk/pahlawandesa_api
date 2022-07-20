@@ -14,7 +14,7 @@ class ProductDetailResponse
 
         $this->category = [
             'id' => $model->category_id,
-            'name' => $model->category_name,
+            'name' => $model->name,
         ];
                
         $this->product = [
