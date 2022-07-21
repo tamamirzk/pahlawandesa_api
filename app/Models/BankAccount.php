@@ -3,28 +3,27 @@ namespace App\Models;
 
 use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BankAccount extends Model
 {
+    use SoftDeletes;
 
-    protected $table = "bank_account";
-    protected $defaultKey = 'bank_account_id ';
+    protected $defaultKey = 'id';
     protected $defaultSort = 'asc';
-    public $timestamps = false;
 
     protected $fillable = [
-        'user_guid',
         'seller_guid',
         'bank_name',
         'account_name',
         'account_number',
-        'created_user',
-        'created_date',
-        'modified_user',
-        'modified_date',
-        'is_deleted',
+        'deleted_at',
     ];
     
+    protected $dates = [
+        'created_at',
+        'updated_at',
+    ];
 
     public function getSortDirection()
     {

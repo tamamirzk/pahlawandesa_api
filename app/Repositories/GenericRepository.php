@@ -111,8 +111,8 @@ abstract class GenericRepository implements IGenericRepository
     
     public function checkGuidExist($guid)
     {
-        $query_user_guid = User::where('user_guid', $guid)->get();
-        $query_seller_guid = Seller::where('seller_guid', $guid)->get();
+        $query_user_guid = User::where('guid', $guid)->get();
+        $query_seller_guid = Seller::where('guid', $guid)->get();
         if(count($query_user_guid) == 0 AND count($query_seller_guid) == 0) {
             $user_guid = $guid;
         } else {  $this->createGuid(); }

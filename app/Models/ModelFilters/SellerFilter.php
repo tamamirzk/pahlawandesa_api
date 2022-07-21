@@ -21,17 +21,12 @@ class SellerFilter extends ModelFilter
 
     public function seller($seller_id)
     {
-        return $this->where('seller_id', '=', $seller_id);
+        return $this->where('id', '=', $seller_id);
     }
 
     public function name($name)
     {
-        return $this->where('seller_name', 'like', '%' . $name . '%');
-    }
-
-    public function deleted($deleted)
-    {
-        return $this->where('seller.is_deleted', '=',$deleted);
+        return $this->where('name', 'like', '%' . $name . '%');
     }
     
 }

@@ -4,36 +4,35 @@ namespace App\Models;
 use EloquentFilter\Filterable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Transformers\Management\SellerTransformer;
 
 class Seller extends Model
 {
-    use Filterable;
-    public $timestamps = false;
+    use Filterable, SoftDeletes;
 
-    protected $table = "seller";
     protected $defaultSort = 'asc';
-    protected $defaultKey = 'seller_id';
+    protected $defaultKey = 'id';
 
     protected $fillable = [
         'user_id',
         'status',
         'store_name',
-        'seller_name',
-        'seller_guid',
-        'seller_phone',
-        'seller_email',
-        'seller_address',
-        'kabupaten',
-        'kecamatan',
-        'village',
-        'created_user',
-        'created_date',
-        'modified_user',
-        'modified_date',
-        'is_deleted',
+        'name',
+        'guid',
+        'phone_number',
+        'email',
+        'address',
+        'district_id',
+        'sub_district_id',
+        'village_id',
+        'deleted_at',
     ];
 
+    protected $dates = [
+       'created_at',
+       'updated_at',
+   ];
 
     public function getKeyName() { return $this->defaultKey; }
     public function getSortDirection() { return $this->defaultSort; }
@@ -41,7 +40,7 @@ class Seller extends Model
 
     public static function getSellerGuid($seller_id)
     {
-        return Seller::where('seller_id', $seller_id)->get()[0]->seller_guid;
+        return Seller::where('id', $seller_id)->get()[0]->guid;
     }
 
     public static function getSellerList()
@@ -52,10 +51,9 @@ class Seller extends Model
 
     public static function getBank($seller_guid)
     {
-        $query = BankAccount::where('seller_guid', $seller_guid)->get();
-        if(count($query)){ 
-            $bank = $query[0];
-            $data = ['id' => $bank->bank_account_id, 'bank_name' => $bank->bank_name, 'account_name' => $bank->account_name, 'account_number' => $bank->account_number];
+        $bank = BankAccount::where('seller_guid', $seller_guid)->first();
+        if($bank){ 
+            $data = ['id' => $bank->id, 'bank_name' => $bank->bank_name, 'account_name' => $bank->account_name, 'account_number' => $bank->account_number];
         }else{
             $data = ['id' => null, 'bank_name' => null, 'account_name' => null, 'account_number' => null];
         };
@@ -84,8 +82,8 @@ class Seller extends Model
     
     public static function checkGuidExist($guid)
     {
-        $query_user_guid = User::where('user_guid', $guid)->get();
-        $query_seller_guid = Seller::where('seller_guid', $guid)->get();
+        $query_user_guid = User::where('guid', $guid)->get();
+        $query_seller_guid = Seller::where('guid', $guid)->get();
         if(count($query_user_guid) == 0 AND count($query_seller_guid) == 0) {
             $user_guid = $guid;
         } else {  $this->createGuid(); }

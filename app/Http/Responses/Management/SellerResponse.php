@@ -9,11 +9,11 @@ class SellerResponse
 {
     public function __construct($model)
     {
-        $this->id = (int)$model->seller_id;
-        $this->name = $model->seller_name;
+        $this->id = (int)$model->id;
+        $this->name = $model->name;
         $this->store_name = $model->store_name;
-        $this->email = $model->seller_email;
-        $this->phone_number = $model->seller_phone;
+        $this->email = $model->email;
+        $this->phone_number = $model->phone_number;
     }
 
 

@@ -19,7 +19,6 @@ class SellerRepository extends GenericRepository implements ISellerRepository
     {        
         $data = [
             'seller' =>  $id,
-            'deleted' =>  0,
         ];
 
         return $this->model->filter($data)->get();
@@ -31,9 +30,8 @@ class SellerRepository extends GenericRepository implements ISellerRepository
         $sortBy = $sort ? $sort : $this->model->getSortDirection();
 
         $data = [
-            'id' =>  Auth::user()->user_id,
+            'id' =>  Auth::user()->id,
             'name' =>  $filter,
-            'deleted' =>  0,
         ];
 
         return $this->model->filter($data)
@@ -66,27 +64,28 @@ class SellerRepository extends GenericRepository implements ISellerRepository
     
     public function updateBank($data, $id)
     {
-        $seller = $this->model->where('seller_id', $id)->get()[0];
-        $bank = BankAccount::where('seller_guid', $seller->seller_guid)->first();
+        $seller = $this->model->find($id);
+        $bank = BankAccount::where('seller_guid', $seller->guid)->first();
         if($bank){
-            return BankAccount::where('seller_guid', $seller->seller_guid)->update($data);
+            return BankAccount::where('seller_guid', $seller->guid)->update($data);
         }else{
-            return $this->createBank($data, $seller->seller_guid);
+            return $this->createBank($data, $seller->guid);
         }
     }
 
     public function deleteBank($seller_guid)
-    {
-        $data = array('is_deleted'=>1 ,'modified_user'=>Auth::user()->user_id,'modified_date'=> date('Y-m-d H:i:s'));
-        return BankAccount::where('seller_guid', $seller_guid)->update($data);
+    {       
+        $bank = BankAccount::where('seller_guid', $seller_guid)->first();
+        $delete_bank = $bank ? $bank->delete() : true;
+        return true;
     }
 
     public function deleteSeller($seller_id)
     {       
-        $data = array('is_deleted'=>1 ,'modified_user'=>Auth::user()->user_id,'modified_date'=> date('Y-m-d H:i:s'));
-        $seller = $this->model->findOrFail($seller_id);
-        $delete_bank = $this->deleteBank($seller->seller_guid);
+        $seller = $this->model->find($seller_id);
+        $delete_seller = $seller ? $seller->delete() : true;
+        $delete_bank = $seller ? $this->deleteBank($seller->guid) : true;
 
-        return $seller->update($data);
+        return true;
     }
 }

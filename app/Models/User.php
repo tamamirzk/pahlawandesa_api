@@ -23,7 +23,7 @@ class User extends Model
     protected $fillable = [
         'user_type_id',
         'user_category_id',
-        'user_guid',
+        'guid',
         'username',
         'full_name',
         'email',
@@ -73,14 +73,7 @@ class User extends Model
 
     public static function getJobCategory()
     {
-        $job_category = [ 
-            ['name'=>'BUMDES'], 
-            ['name'=>'Kelompok Usaha Bersama'], 
-            ['name'=>'Koperasi'], 
-            ['name'=>'UMKM'], 
-            ['name'=>'Kelompok Tani'], 
-            ['name'=>'Lainnya'], 
-        ];
+        $job_category = UserJob::get()->toArray();
         return $job_category;
     }
     

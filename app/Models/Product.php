@@ -45,12 +45,13 @@ class Product extends Model
     public function getSortDirection() { return $this->defaultSort; }
 
     public function getSellerAddress($id) {
-        $seller = Seller::where('seller_id', $id)->get()->toArray()[0];
-        $village = Village::where('id', $seller['village'])->get()->toArray()[0]['name'];
-        $kecamatan = SubDistrict::where('id', $seller['kecamatan'])->get()->toArray()[0]['name'];
-        $kabupaten = District::where('id', $seller['kabupaten'])->get()->toArray()[0]['name'];
+        
+        $seller = Seller::find($id)->toArray();
+        $village = Village::find($seller['village_id'])->toArray()['name'];
+        $district = District::find($seller['district_id'])->toArray()['name'];
+        $sub_district = SubDistrict::find($seller['sub_district_id'])->toArray()['name'];
 
-        $address = 'Desa '.$village.', Kecamatan '.$kecamatan.', '.$kabupaten;
+        $address = 'Desa '.$village.', Kecamatan '.$sub_district.', '.$district;
         return $address ? $address : null; 
     }
 

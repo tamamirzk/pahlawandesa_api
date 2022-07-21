@@ -29,7 +29,7 @@ class AuthController extends Controller
     
     public function login(Request $request)
     {
-        try {
+        // try {
             $patch = new LoginRequest($request->all());
             $credentials = $patch->parse();
 
@@ -44,9 +44,9 @@ class AuthController extends Controller
                     return $this->buildErrorResponse('error' , 'User Not Found', 404);
                 }
             }
-        } catch (\Exception $exception) {
-            return $this->buildErrorResponse('error' , $exception->getMessage(), $exception->getCode());
-        }
+        // } catch (\Exception $exception) {
+        //     return $this->buildErrorResponse('error' , $exception->getMessage(), $exception->getCode());
+        // }
     }
 
     public function register(Request $request)

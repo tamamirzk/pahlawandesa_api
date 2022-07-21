@@ -9,9 +9,8 @@ class ProductUnit extends Model
 {
     use Filterable;
 
-    protected $table = "product_unit";
     protected $defaultSort = 'asc';
-    protected $defaultKey = 'product_unit_id';
+    protected $defaultKey = 'id';
 
     protected $fillable = [];
     

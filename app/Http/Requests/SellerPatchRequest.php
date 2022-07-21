@@ -19,14 +19,14 @@ class SellerPatchRequest
         }
 
         $validator = Validator::make($data, [
-            "store_name" => "required",
-            "seller_name" => "required",
-            "seller_address" => "required",
-            "seller_phone" => "required",
-            "seller_email" => "required",
-            "kabupaten" => "required",
-            "kecamatan" => "required",
-            "village" => "required",
+            "store_name" => "",
+            "name" => "",
+            "address" => "",
+            "phone_number" => "",
+            "email" => "",
+            "district_id" => "",
+            "sub_district_id" => "",
+            "village_id" => "",
         ]);
 
         if ($validator->fails())
@@ -38,32 +38,26 @@ class SellerPatchRequest
     private function map($object)
     {
         $this->store_name = property_exists($object, 'store_name') ? $object->store_name : null;
-        $this->seller_name = property_exists($object, 'seller_name') ? $object->seller_name : null;
-        $this->seller_address = property_exists($object, 'seller_address') ? $object->seller_address : null;
-        $this->seller_phone = property_exists($object, 'seller_phone') ? $object->seller_phone : null;
-        $this->seller_email = property_exists($object, 'seller_email') ? $object->seller_email : null;
-        $this->kabupaten = property_exists($object, 'kabupaten') ? $object->kabupaten : null;
-        $this->kecamatan = property_exists($object, 'kecamatan') ? $object->kecamatan : null;
-        $this->village = property_exists($object, 'village') ? $object->village : null;
-
-        $this->modified_user = Auth::user()->user_id;
-        $this->modified_date = date('Y-m-d H:i:s');
-
+        $this->name = property_exists($object, 'name') ? $object->name : null;
+        $this->address = property_exists($object, 'address') ? $object->address : null;
+        $this->phone_number = property_exists($object, 'phone_number') ? $object->phone_number : null;
+        $this->email = property_exists($object, 'email') ? $object->email : null;
+        $this->district_id = property_exists($object, 'district_id') ? $object->district_id : null;
+        $this->sub_district_id = property_exists($object, 'sub_district_id') ? $object->sub_district_id : null;
+        $this->village_id = property_exists($object, 'village_id') ? $object->village_id : null;
     }
 
     public function parse()
     {
         $result = array(
             'store_name' => $this->store_name,
-            'seller_name' => $this->seller_name,
-            'seller_phone' => $this->seller_phone,
-            'seller_email' => $this->seller_email,
-            'seller_address' => $this->seller_address,
-            'kabupaten' => $this->kabupaten,
-            'kecamatan' => $this->kecamatan,
-            'village' => $this->village,
-            'modified_user' => $this->modified_user,
-            'modified_date' => $this->modified_date,
+            'name' => $this->name,
+            'phone_number' => $this->phone_number,
+            'email' => $this->email,
+            'address' => $this->address,
+            'district_id' => $this->district_id,
+            'sub_district_id' => $this->sub_district_id,
+            'village_id' => $this->village_id,
         );
 
         return array_filter($result, function ($value) {

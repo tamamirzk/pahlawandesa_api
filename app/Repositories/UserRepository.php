@@ -48,9 +48,10 @@ class UserRepository extends GenericRepository implements IUserRepository{
         $email = $data['email'];
         $username = $data['username'];
 
-        $data['user_guid'] = $this->createGuid();
-        $data['catalog_name'] = $this->createCatalogName($username);
         $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+        $data['catalog_name'] = $this->createCatalogName($username);
+        $data['catalog_url'] = $data['catalog_name'];
+        $data['guid'] = $this->createGuid();
         
         $user = $this->model->create($data);
         // Mail::to($user)->send(new Welcome($user));

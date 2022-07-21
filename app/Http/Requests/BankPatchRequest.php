@@ -35,26 +35,17 @@ class BankPatchRequest
         $this->bank_name = property_exists($object, 'bank_name') ? $object->bank_name : null;
         $this->account_name = property_exists($object, 'account_name') ? $object->account_name : null;
         $this->account_number = property_exists($object, 'account_number') ? $object->account_number : null;
-
-        $this->user_guid = Auth::user()->user_guid;
-        $this->modified_user = Auth::user()->user_id;
-        $this->modified_date = date('Y-m-d H:i:s');
-
     }
 
     public function parse()
     {
         $result = array(
-            'user_guid' => $this->user_guid,
             'bank_name' => $this->bank_name,
             'account_name' => $this->account_name,
             'account_number' => $this->account_number,
-            'modified_user' => $this->modified_user,
-            'modified_date' => $this->modified_date,
         );
 
-        return array_filter($result, function ($value) {
-            return !empty($value) || $value == 0;
-        });
+        $data = array_filter($result, function ($value) { return !empty($value); });
+        return count($data) == 0 ? null: $data;
     }
 }

@@ -39,12 +39,12 @@ class ProductController extends Controller
     } 
     
     public function find($id) {
-        try {
+        // try {
             $result = $this->repo->findProduct($id);
             return $this->buildFilterNoMetaResponse($result, new ProductDetailTransformer(), 'success', 'products');
 
-        } catch (\Exception $exception) {
-            return $this->buildErrorResponse('error' , $exception->getMessage(), $exception->getCode());
-        }
+        // } catch (\Exception $exception) {
+        //     return $this->buildErrorResponse('error' , $exception->getMessage(), $exception->getCode());
+        // }
     } 
 }

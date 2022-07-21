@@ -63,14 +63,13 @@ class ProductRepository extends GenericRepository implements IProductRepository
     {        
         $data = [
             'product' =>  $id,
-            'deleted' =>  0,
         ];
 
         return $this->model->filter($data)
-            ->select('product.*','categories.name', 'categories.id as category_id', 'product_unit.product_unit_name', 'users.full_name', 'users.catalog_name')
+            ->select('product.*','categories.name', 'categories.id as category_id', 'product_units.name as product_unit_name', 'users.full_name', 'users.catalog_name')
             ->join('users', 'users.id', '=', 'product.user_id')
             ->join('categories', 'categories.id', '=', 'product.category_id')
-            ->join('product_unit', 'product_unit.product_unit_id', '=', 'product.product_unit')
+            ->join('product_units', 'product_units.id', '=', 'product.product_unit')
             ->get();
     }
 

@@ -25,7 +25,7 @@ class SellerController extends Controller
             $filter = request('q');
             $limit = request('limit');
             $page = request('page', 1);
-            $order = request('order_by', 'created_date');
+            $order = request('order_by', 'created_at');
             $sort = request('sort_by');
 
             if($limit){
@@ -60,7 +60,7 @@ class SellerController extends Controller
 
             if ($credentials){
                 $result = $this->repo->create($credentials);
-                $bank_result = $request->bank_name ? $this->repo->createBank($bank_credentials,$credentials['seller_guid']) : null;
+                $bank_result = $request->bank_name ? $this->repo->createBank($bank_credentials,$credentials['guid']) : null;
                 if ($result){
                     return $this->buildResponse('success' , 'Seller Created!');
                 } else {
@@ -76,19 +76,18 @@ class SellerController extends Controller
         try {
             $patch = new SellerPatchRequest($request->all());
             $credentials = $patch->parse();
-            $bank_patch = $request->bank_name ? new BankPatchRequest($request->all()) : null;
-            $bank_credentials = $request->bank_name ? $bank_patch->parse() : null;
+            $bank_patch = new BankPatchRequest($request->all());
+            $bank_credentials = $bank_patch->parse();
+            
+            if ($credentials){ $result = $this->repo->update($id, $credentials); }
+            if ($bank_credentials){ $result = $this->repo->updateBank($bank_credentials, $id); }
 
-            if ($credentials){
-                $result = $this->repo->update($id, $credentials);
-                $bank_result = $request->bank_name ? $this->repo->updateBank($bank_credentials,$id) : null;
-
-                if ($result){
-                    return $this->buildResponse('success' , 'Seller Updated!');
-                } else {
-                    return $this->buildErrorResponse('error' , 'User Not Found', 404);
-                }
+            if ($result){
+                return $this->buildResponse('success' , 'Seller Updated!');
+            } else {
+                return $this->buildErrorResponse('error' , 'Seller Not Found', 404);
             }
+
         } catch (\Exception $exception) {
             return $this->buildErrorResponse('error' , $exception->getMessage(), $exception->getCode());
         }
